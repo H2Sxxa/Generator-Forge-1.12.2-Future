@@ -17,11 +17,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
-    - name: Generate mcreator.gradle
-      run: |
-        cat > forge-1.12.2/workspacebase/mcreator.gradle << EOF
-        EOF
     - name: Set up JDK 1.8
       uses: actions/setup-java@v4
       with:
@@ -31,8 +26,7 @@ jobs:
       uses: gradle/actions/setup-gradle@v3
     - name: Project Testing
       run: |
-        cd forge-1.12.2/workspacebase
-        cat mcreator.gradle
+        cd testmod
         chmod +x gradlew
         ./gradlew tasks
         ./gradlew setupDecompWorkspace
