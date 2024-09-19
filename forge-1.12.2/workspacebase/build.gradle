@@ -60,11 +60,5 @@ repositories {
     mavenLocal() // Must be last for caching to work
 }
 
-sourceSets {
-    main { output.resourcesDir = output.classesDir }
-}
-
-
-
 apply from: 'mcreator.gradle'
 
