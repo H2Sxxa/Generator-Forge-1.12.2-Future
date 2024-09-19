@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * RFG test mod class
  */
-@Mod(modid = "testmod", version = Tags.TAG_VERSION, name = "RFG Test Mod", acceptedMinecraftVersions = "[1.12.2]")
+@Mod(modid = "testmod", name = "RFG Test Mod", acceptedMinecraftVersions = "[1.12.2]")
 public class TestMod {
     private static Logger LOG = LogManager.getLogger("testmod");
 
