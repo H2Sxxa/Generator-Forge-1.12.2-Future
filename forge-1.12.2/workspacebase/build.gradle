@@ -1,61 +1,70 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
-    }
+import org.jetbrains.gradle.ext.Gradle
+
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'maven-publish'
+    id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.7'
+    id 'eclipse'
+    id 'com.gtnewhorizons.retrofuturagradle' version '1.4.1'
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
-        
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
+
 
 version = "1.0"
 group = "com.yourname.modid"
 archivesBaseName = "modid"
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+        // Azul covers the most platforms for Java 8 toolchains, crucially including MacOS arm64
+        vendor.set(org.gradle.jvm.toolchain.JvmVendorSpec.AZUL)
+    }
+    // Generate sources and javadocs jars when building and publishing
+    withSourcesJar()
+    // withJavadocJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
 
 minecraft {
-	mappings channel: 'snapshot', version: '20171003-1.12'
+    mcVersion.set('1.12.2')
 
-    runs {
-        client {
-            workingDirectory project.file('run')
+    // MCP Mappings
+    mcpMappingChannel = 'snapshot'
+    mcpMappingVersion = '20171003-1.12'
+    
+    // Set username here, the UUID will be looked up automatically
+    username = 'Legacy'
+}
 
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                examplemod {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                examplemod {
-                    source sourceSets.main
-                }
-            }
+repositories {
+    maven {
+        name 'CleanroomMC Maven'
+        url 'https://maven.cleanroommc.com'
+    }
+    maven {
+        // RetroFuturaGradle
+        name 'GTNH Maven'
+        url 'https://nexus.gtnewhorizons.com/repository/public/'
+        allowInsecureProtocol = true
+        mavenContent {
+            includeGroup 'com.gtnewhorizons'
+            includeGroup 'com.gtnewhorizons.retrofuturagradle'
         }
     }
+    mavenLocal() // Must be last for caching to work
 }
 
 sourceSets {
     main { output.resourcesDir = output.classesDir }
 }
 
-dependencies {
-    minecraft 'net.minecraftforge:forge:1.12.2-${generator.getGeneratorBuildFileVersion()}'
-}
+
 
 apply from: 'mcreator.gradle'
 
