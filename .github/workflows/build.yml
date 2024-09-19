@@ -35,4 +35,5 @@ jobs:
         cat mcreator.gradle
         chmod +x gradlew
         ./gradlew tasks
+        ./gradlew setupDecompWorkspace
         ./gradlew build
